@@ -1,0 +1,13 @@
+{
+  "name": "@ella/source",
+  "version": "0.0.0",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "@nx/js": "17.2.4",
+    "@nx/workspace": "17.2.4",
+    "@nxext/preact": "^17.0.1",
+    "nx": "17.2.4"
+  },
+  "packageManager": "yarn@4.0.2"
+}
