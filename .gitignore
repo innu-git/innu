@@ -40,3 +40,12 @@ nx-cloud.env
 Thumbs.db
 
 .nx/cache
+
+# Yarn
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

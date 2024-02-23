@@ -4,13 +4,13 @@
   "license": "MIT",
   "private": true,
   "devDependencies": {
-    "@nx/eslint": "18.0.2",
-    "@nx/jest": "18.0.2",
-    "@nx/js": "18.0.2",
-    "@nx/vite": "18.0.2",
-    "@nx/workspace": "18.0.2",
+    "@nx/eslint": "18.0.4",
+    "@nx/jest": "18.0.4",
+    "@nx/js": "18.0.4",
+    "@nx/vite": "18.0.4",
+    "@nx/workspace": "18.0.4",
     "@nxext/preact": "^17.0.1",
-    "nx": "18.0.2",
+    "nx": "18.0.4",
     "typescript": "^5.3.3"
   },
   "packageManager": "yarn@4.1.0"
