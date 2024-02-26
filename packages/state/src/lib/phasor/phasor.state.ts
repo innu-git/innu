@@ -1,6 +1,6 @@
 import { Phasor, PhasorFactory, isPhasor } from '@ella/phasor';
 import { Effect } from '../state.types';
-import { PhasorActions, PhasorInnerActions } from './phasor.state.types';
+import { PhasorActionType, PhasorActions, PhasorInnerActions } from './phasor.state.types';
 
 export function makePhasorState<I, O, E, K extends string>(
   key: K,
@@ -17,14 +17,17 @@ export function makePhasorState<I, O, E, K extends string>(
     action,
     cause
   ) => {
+    if(action.key !== key) return; // not for us
+
     const currentState = () => getState()[key];
+
     switch (action.type) {
       case 'set':
         return {
           [key]: action.payload,
         } as PhasorState;
-      case 'rerun':
-      case 'run': {
+      case PhasorActionType.Rerun:
+      case PhasorActionType.Run: {
         const currentStateNow = currentState();
 
         let nextPhasor: undefined | Phasor<I, O, E>;

@@ -1,14 +1,19 @@
 import { Phasor } from '@ella/phasor';
 
+export enum PhasorActionType {
+  Run = 'run',
+  Rerun = 'rerun',
+}
+
 export type PhasorActions<I, K> =
   | {
       key: K;
-      type: 'run';
+      type: PhasorActionType.Run;
       payload: I;
     }
   | {
       key: K;
-      type: 'rerun';
+      type: PhasorActionType.Rerun;
       payload: I;
     };
 
