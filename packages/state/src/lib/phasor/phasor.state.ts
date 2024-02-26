@@ -1,4 +1,4 @@
-import { Phase, Phasor, PhasorFactory, isPhasor } from '@ella/phasor';
+import { Phasor, PhasorFactory, isPhasor } from '@ella/phasor';
 import { Effect } from '../state.types';
 import { PhasorActions, PhasorInnerActions } from './phasor.state.types';
 
@@ -9,9 +9,7 @@ export function makePhasorState<I, O, E, K extends string>(
   type PhasorState = Record<K, Phasor<I, O, E>>;
 
   const state = {
-    [key]: {
-      phase: Phase.Rest,
-    },
+    [key]: PhasorFactory.rest(),
   } as PhasorState;
 
   const effect: Effect<PhasorState, PhasorInnerActions<I, O, E, K>> = async (
@@ -29,19 +27,24 @@ export function makePhasorState<I, O, E, K extends string>(
       case 'run': {
         const currentStateNow = currentState();
 
-        const nextPhasor: undefined | Phasor<I, O, E> = isPhasor.atRest(
-          currentStateNow
-        )
-          ? PhasorFactory.run(action.payload)
-          : isPhasor.done(currentStateNow)
-          ? PhasorFactory.rerun(action.payload, currentStateNow.result)
-          : isPhasor.failed(currentStateNow)
-          ? PhasorFactory.rerun(
-              action.payload,
-              undefined,
-              currentStateNow.error
-            )
-          : undefined;
+        let nextPhasor: undefined | Phasor<I, O, E>;
+
+        if (isPhasor.atRest(currentStateNow)) {
+          nextPhasor = PhasorFactory.run(action.payload);
+        } else if (isPhasor.done(currentStateNow)) {
+          nextPhasor = PhasorFactory.rerun(
+            action.payload,
+            currentStateNow.result
+          );
+        } else if (isPhasor.failed(currentStateNow)) {
+          nextPhasor = PhasorFactory.rerun(
+            action.payload,
+            undefined,
+            currentStateNow.error
+          );
+        } else {
+          nextPhasor = undefined;
+        }
 
         if (!nextPhasor) return; // not a scenario we can handle.
 
@@ -65,5 +68,5 @@ export function makePhasorState<I, O, E, K extends string>(
     }
   };
 
-  return [state, effect as  Effect<PhasorState, PhasorActions<I, K>>] as const;
+  return [state, effect as Effect<PhasorState, PhasorActions<I, K>>] as const;
 }
