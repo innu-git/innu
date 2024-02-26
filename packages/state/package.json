@@ -1,10 +1,22 @@
 {
   "name": "@ella/state",
   "version": "0.0.1",
-  "dependencies": {
+  "peerDependencies": {
     "@ella/phasor": "0.0.1"
   },
-  "main": "./index.js",
-  "module": "./index.mjs",
-  "typings": "./index.d.ts"
+  "main": "./state.js",
+  "module": "./state.mjs",
+  "exports": {
+    ".": {
+      "import": "./state.mjs",
+      "require": "./state.js",
+      "types": "./state.d.ts"
+    },
+    "./phasor": {
+      "import": "./phasor.mjs",
+      "require": "./phasor.js",
+      "types": "./phasor.d.ts"
+    }
+  },
+  "typings": "./state.d.ts"
 }
