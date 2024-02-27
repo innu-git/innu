@@ -1,6 +1,6 @@
-import { Phasor, PhasorFactory, isPhasor } from '@ella/phasor';
-import { Effect } from '../state.types';
-import { PhasorActionType, PhasorActions, PhasorInnerActions } from './phasor.state.types';
+import { Phasor, MakePhasor, isPhasor } from '@ella/phasor';
+import { Taker } from '../state.types';
+import { PhasorAction, PhasorActions, PhasorInnerActions } from './phasor.state.types';
 
 export function makePhasorState<I, O, E, K extends string>(
   key: K,
@@ -9,10 +9,10 @@ export function makePhasorState<I, O, E, K extends string>(
   type PhasorState = Record<K, Phasor<I, O, E>>;
 
   const state = {
-    [key]: PhasorFactory.rest(),
+    [key]: MakePhasor.rest(),
   } as PhasorState;
 
-  const effect: Effect<PhasorState, PhasorInnerActions<I, O, E, K>> = async (
+  const taker: Taker<PhasorState, PhasorInnerActions<I, O, E, K>> = async (
     getState,
     action,
     cause
@@ -26,21 +26,21 @@ export function makePhasorState<I, O, E, K extends string>(
         return {
           [key]: action.payload,
         } as PhasorState;
-      case PhasorActionType.Rerun:
-      case PhasorActionType.Run: {
+      case PhasorAction.Rerun:
+      case PhasorAction.Run: {
         const currentStateNow = currentState();
 
         let nextPhasor: undefined | Phasor<I, O, E>;
 
         if (isPhasor.atRest(currentStateNow)) {
-          nextPhasor = PhasorFactory.run(action.payload);
+          nextPhasor = MakePhasor.run(action.payload);
         } else if (isPhasor.done(currentStateNow)) {
-          nextPhasor = PhasorFactory.rerun(
+          nextPhasor = MakePhasor.rerun(
             action.payload,
             currentStateNow.result
           );
         } else if (isPhasor.failed(currentStateNow)) {
-          nextPhasor = PhasorFactory.rerun(
+          nextPhasor = MakePhasor.rerun(
             action.payload,
             undefined,
             currentStateNow.error
@@ -49,7 +49,7 @@ export function makePhasorState<I, O, E, K extends string>(
           nextPhasor = undefined;
         }
 
-        if (!nextPhasor) return; // not a scenario we can handle.
+        if (!nextPhasor) return; // not a scenario we must handle.
 
         await cause({
           type: 'set',
@@ -60,16 +60,16 @@ export function makePhasorState<I, O, E, K extends string>(
         try {
           const result = await fn(action.payload);
           return {
-            [key]: PhasorFactory.done(action.payload, result),
+            [key]: MakePhasor.done(action.payload, result),
           } as PhasorState;
         } catch (error) {
           return {
-            [key]: PhasorFactory.fail(action.payload, error),
+            [key]: MakePhasor.fail(action.payload, error),
           } as PhasorState;
         }
       }
     }
   };
 
-  return [state, effect as Effect<PhasorState, PhasorActions<I, K>>] as const;
+  return [state, taker as Taker<PhasorState, PhasorActions<I, K>>] as const;
 }

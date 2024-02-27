@@ -1,21 +1,24 @@
 import { Phase } from '@ella/phasor';
 import { state, stateManager } from '../../test/dummy.state';
 import { make } from '../state';
-import { EffectActions } from '../state.types';
+import { TakerActions } from '../state.types';
 import { makePhasorState } from './phasor.state';
+import { PhasorAction } from './phasor.state.types';
 
 describe('Phasor state', () => {
   it('works', async () => {
-    const [phasorState, effect] = makePhasorState(
+    const [phasorState, taker] = makePhasorState(
       'user',
       async (input: string) => input.toUpperCase()
     );
-    const { tap } = make(stateManager);
+    const [attach] = make(stateManager);
 
-    const cause = tap<typeof phasorState, EffectActions<typeof effect>>(effect);
+    const [toss] = attach<typeof phasorState, TakerActions<typeof taker>>(
+      taker
+    );
 
-    await cause({
-      type: 'run',
+    await toss({
+      type: PhasorAction.Run,
       payload: 'hello',
       key: 'user',
     });

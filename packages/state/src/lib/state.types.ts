@@ -1,13 +1,15 @@
 export type Maybe<T> = T | undefined | void;
 export type Awaitable<T> = T | PromiseLike<T>;
 export type MaybeAwaitable<T> = Maybe<T> | Awaitable<Maybe<T>>;
-export type Cause<Action> = (action: Action) => MaybeAwaitable<void>;
+
+export type Toss<Action> = (action: Action) => MaybeAwaitable<void>;
+
 export type GetState<State> = () => State;
 
-export type Effect<State, Action> = (
+export type Taker<State, Action> = (
   getState: GetState<State>,
   action: Action,
-  cause: Cause<Action>
+  tossLocal: Toss<Action>
 ) => MaybeAwaitable<Partial<State>>;
 
 export type StateManager<State> = {
@@ -16,4 +18,4 @@ export type StateManager<State> = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type EffectActions<E> = E extends Effect<any, infer A> ? A : never;
+export type TakerActions<T> = T extends Taker<any, infer A> ? A : never;

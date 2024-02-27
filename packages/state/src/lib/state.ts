@@ -1,22 +1,25 @@
-import { Cause, Effect, StateManager } from './state.types';
+import { Toss, Taker, StateManager } from './state.types';
 
-export function make<State>(mgr: StateManager<State>) {
+export function make<
+  State,
+  Manager extends StateManager<State> = StateManager<State>
+>(mgr: Manager) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const effects: Effect<any, any>[] = [];
+  const takers: Taker<any, any>[] = [];
 
-  async function cause<Action>(action: Action) {
-    for (const responder of effects) {
-      const newState = await responder(mgr.getState, action, cause);
+  async function toss<Action>(action: Action) {
+    for (const taker of takers) {
+      const newState = await taker(mgr.getState, action, toss);
       if (newState) mgr.setState(newState);
     }
   }
 
-  function tap<State, Action>(fn: Effect<State, Action>) {
-    effects.push(fn);
-    return cause as Cause<Action>;
+  function attach<OwnState = State, OwnAction = unknown>(
+    fn: Taker<State & OwnState, OwnAction>
+  ) {
+    takers.push(fn);
+    return [toss as Toss<OwnAction>] as const;
   }
 
-  return {
-    tap,
-  };
+  return [attach]
 }
