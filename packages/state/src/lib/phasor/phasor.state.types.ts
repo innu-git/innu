@@ -1,4 +1,4 @@
-import { Phasor } from '@ella/phasor';
+import { Phasor } from '@innu/phasor';
 
 export enum PhasorAction {
   Run = 'run',

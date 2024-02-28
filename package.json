@@ -1,5 +1,5 @@
 {
-  "name": "@ella/source",
+  "name": "@innu/source",
   "version": "0.0.0",
   "license": "MIT",
   "private": true,
@@ -33,6 +33,5 @@
   "packageManager": "yarn@4.1.0",
   "nx": {
     "includedScripts": []
-  },
-  "dependencies": {}
+  }
 }

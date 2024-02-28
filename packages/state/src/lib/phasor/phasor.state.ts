@@ -1,4 +1,4 @@
-import { Phasor, MakePhasor, isPhasor } from '@ella/phasor';
+import { Phasor, MakePhasor, isPhasor } from '@innu/phasor';
 import { Taker } from '../state.types';
 import { PhasorAction, PhasorActions, PhasorInnerActions } from './phasor.state.types';
 

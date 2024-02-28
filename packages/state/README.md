@@ -1,4 +1,4 @@
-# @ella/state
+# @innu/state
 
 This library helps manage your state using async functions that operate a bit like [redux](https://redux.js.org/)'s [reducers](https://redux.js.org/tutorials/fundamentals/part-3-state-actions-reducers#writing-reducers). This library does not act as a state manager, but allows you to use any state management solution like [`zustand`](https://github.com/pmndrs/zustand) or [`jotai`](https://github.com/pmndrs/jotai).
 
@@ -22,7 +22,7 @@ Consider the following code
 ```ts
 // state.ts
 import { create } from 'zustand';
-import { make } from '@ella/state';
+import { make } from '@innu/state';
 import type { MyActions, MyState } from './types.ts'; // Assume these are defined.
 
 export const [attach] = make(

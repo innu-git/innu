@@ -1565,9 +1565,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ella/source@workspace:.":
+"@innu/source@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@ella/source@workspace:."
+  resolution: "@innu/source@workspace:."
   dependencies:
     "@nx/eslint": "npm:18.0.4"
     "@nx/eslint-plugin": "npm:18.0.4"

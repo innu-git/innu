@@ -15,8 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@ella/phasor": ["packages/phasor/src/index.ts"],
-      "@ella/state": ["packages/state/src/index.ts"]
+      "@innu/phasor": ["packages/phasor/src/index.ts"],
+      "@innu/state": ["packages/state/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

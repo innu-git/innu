@@ -1,4 +1,4 @@
-import { Phase, Rest } from "@ella/phasor";
+import { Phase, Rest } from "@innu/phasor";
 import { StateManager } from "../lib/state.types";
 
 export const state = {

@@ -1,8 +1,8 @@
 {
-  "name": "@ella/state",
+  "name": "@innu/state",
   "version": "0.0.1",
   "peerDependencies": {
-    "@ella/phasor": "0.0.1"
+    "@innu/phasor": "0.0.1"
   },
   "main": "./state.js",
   "module": "./state.mjs",

@@ -1,4 +1,4 @@
-import { Phase } from '@ella/phasor';
+import { Phase } from '@innu/phasor';
 import { state, stateManager } from '../../test/dummy.state';
 import { make } from '../state';
 import { TakerActions } from '../state.types';
