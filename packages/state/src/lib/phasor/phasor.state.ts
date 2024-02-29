@@ -1,75 +1,70 @@
-import { Phasor, MakePhasor, isPhasor } from '@innu/phasor';
+import { Phasor, ph, res } from '@innu/phasor';
 import { Taker } from '../state.types';
-import { PhasorAction, PhasorActions, PhasorInnerActions } from './phasor.state.types';
+import {
+  PhasorAction,
+  PhasorActions,
+  PhasorInnerActions,
+} from './phasor.state.types';
 
-export function makePhasorState<I, O, E, K extends string>(
+export function makePhasorState<I, O, K extends string>(
   key: K,
   fn: (input: I) => Promise<O>
 ) {
-  type PhasorState = Record<K, Phasor<I, O, E>>;
+  type ThisPhasor = Phasor<I, O>;
+  type ThisState = Record<K, ThisPhasor>;
 
   const state = {
-    [key]: MakePhasor.rest(),
-  } as PhasorState;
+    [key]: ph.rest(),
+  } as ThisState;
 
-  const taker: Taker<PhasorState, PhasorInnerActions<I, O, E, K>> = async (
+  const taker: Taker<ThisState, PhasorInnerActions<I, O, K>> = async (
     getState,
     action,
     cause
   ) => {
-    if(action.key !== key) return; // not for us
+    if (action.key !== key) return; // not for us
 
-    const currentState = () => getState()[key];
+    const _phasor = () => getState()[key];
 
     switch (action.type) {
       case 'set':
         return {
           [key]: action.payload,
-        } as PhasorState;
+        } as ThisState;
       case PhasorAction.Rerun:
       case PhasorAction.Run: {
-        const currentStateNow = currentState();
+        const phasor = _phasor();
 
-        let nextPhasor: undefined | Phasor<I, O, E>;
-
-        if (isPhasor.atRest(currentStateNow)) {
-          nextPhasor = MakePhasor.run(action.payload);
-        } else if (isPhasor.done(currentStateNow)) {
-          nextPhasor = MakePhasor.rerun(
-            action.payload,
-            currentStateNow.result
-          );
-        } else if (isPhasor.failed(currentStateNow)) {
-          nextPhasor = MakePhasor.rerun(
-            action.payload,
-            undefined,
-            currentStateNow.error
-          );
-        } else {
-          nextPhasor = undefined;
+        if (!ph.is.rest(phasor) && !ph.is.done(phasor)) {
+          return {}; // ignore but return something so that `toss` completes.
         }
-
-        if (!nextPhasor) return; // not a scenario we must handle.
 
         await cause({
           type: 'set',
           key,
-          payload: nextPhasor,
+          payload: ph.is.rest(phasor)
+            ? ph.run(action.payload)
+            : ph.rerun(action.payload, phasor.result),
         });
 
         try {
           const result = await fn(action.payload);
+          const donePhasor = res.is.res(result)
+            ? ph.done(action.payload, result)
+            : ph.done(action.payload, res.ok(result));
+
           return {
-            [key]: MakePhasor.done(action.payload, result),
-          } as PhasorState;
+            [key]: donePhasor,
+          } as ThisState;
         } catch (error) {
+          const errorPhasor = ph.done(action.payload, res.err(error));
           return {
-            [key]: MakePhasor.fail(action.payload, error),
-          } as PhasorState;
+            [key]: errorPhasor,
+          } as ThisState;
         }
       }
     }
   };
 
-  return [state, taker as Taker<PhasorState, PhasorActions<I, K>>] as const;
+  return [state, taker as Taker<ThisState, PhasorActions<I, K>>] as const;
 }

@@ -1,3 +1,3 @@
-export * from './lib/phasor.guards';
 export * from './lib/phasor.types';
-export * from './lib/phasor.utils';
+export * from './lib/phasor';
+export * from './lib/result';

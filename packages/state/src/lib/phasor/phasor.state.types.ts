@@ -17,10 +17,10 @@ export type PhasorActions<I, K> =
       payload: I;
     };
 
-export type PhasorInnerActions<I, O, E, K> =
+export type PhasorInnerActions<I, O, K> =
   | {
       type: 'set';
       key: K;
-      payload: Phasor<I, O, E>;
+      payload: Phasor<I, O>;
     }
   | PhasorActions<I, K>;

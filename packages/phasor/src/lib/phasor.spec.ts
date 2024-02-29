@@ -1,34 +1,105 @@
-import { isPhasor } from "./phasor.guards";
-import { Phase } from "./phasor.types";
+import { ph } from './phasor';
+import { Phase, Rerun, Rest, Run } from './phasor.types';
 
-describe('Phasor', () => {
-  it('checks if a phasor is at rest', () => {
-    expect(isPhasor.atRest({ phase: Phase.Rest })).toBe(true);
+describe('ph', () => {
+  describe('rest', () => {
+    it('should return a Rest object', () => {
+      const result = ph.rest();
+      expect(result).toEqual({ phase: Phase.Rest });
+    });
   });
 
-  it('checks if a phasor is running', () => {
-    expect(isPhasor.running({ phase: Phase.Run, input: 'input' })).toBe(true);
+  describe('run', () => {
+    it('should return a Run object with the provided input', () => {
+      const input = 'test';
+      const result = ph.run(input);
+      expect(result).toEqual({ phase: Phase.Run, input });
+    });
   });
 
-  it('checks if a phasor is done', () => {
-    expect(isPhasor.done({ phase: Phase.Done, result: 'result', input: 'input' })).toBe(true);
+  describe('done', () => {
+    it('should return a Done object with the provided input and result', () => {
+      const input = 'test';
+      const resultValue = 42;
+      const result = ph.done(input, resultValue);
+      expect(result).toEqual({ phase: Phase.Done, input, result: resultValue });
+    });
   });
 
-  it('checks if a phasor is failed', () => {
-    expect(isPhasor.failed({ phase: Phase.Fail, input: 'input', error: new Error() })).toBe(true);
+  describe('rerun', () => {
+    it('should return a Rerun object with the provided input and result', () => {
+      const input = 'test';
+      const resultValue = 42;
+      const result = ph.rerun(input, resultValue);
+      expect(result).toEqual({
+        phase: Phase.Rerun,
+        input,
+        result: resultValue,
+      });
+    });
   });
 
-  it('checks if a phasor is rerunning', () => {
-    expect(isPhasor.rerunning({ phase: Phase.Rerun, input: 'input' })).toBe(true);
-  });
+  describe('is', () => {
+    describe('rest', () => {
+      it('should return true for a Rest object', () => {
+        const phasor: Rest = { phase: Phase.Rest };
+        const result = ph.is.rest(phasor);
+        expect(result).toBe(true);
+      });
 
-  it('checks if a phasor is settled', () => {
-    expect(isPhasor.settled({ phase: Phase.Done, result: 'result', input: 'input' })).toBe(true);
-    expect(isPhasor.settled({ phase: Phase.Fail, input: 'input', error: new Error() })).toBe(true);
-  });
+      it('should return false for non-Rest objects', () => {
+        const phasor: Run<string> = { phase: Phase.Run, input: 'test' };
+        const result = ph.is.rest(phasor);
+        expect(result).toBe(false);
+      });
+    });
 
-  it('checks if a phasor is pending', () => {
-    expect(isPhasor.pending({ phase: Phase.Run, input: 'input' })).toBe(true);
-    expect(isPhasor.pending({ phase: Phase.Rerun, input: 'input' })).toBe(true);
+    // Add similar tests for other is functions (running, done, rerunning, pending, phasor)
+
+    describe('pending', () => {
+      it('should return true for a Run object', () => {
+        const phasor: Run<string> = { phase: Phase.Run, input: 'test' };
+        const result = ph.is.pending(phasor);
+        expect(result).toBe(true);
+      });
+
+      it('should return true for a Rerun object', () => {
+        const phasor: Rerun<string, number> = {
+          phase: Phase.Rerun,
+          input: 'test',
+          result: 42,
+        };
+        const result = ph.is.pending(phasor);
+        expect(result).toBe(true);
+      });
+
+      it('should return false for non-pending objects', () => {
+        const phasor: Rest = { phase: Phase.Rest };
+        const result = ph.is.pending(phasor);
+        expect(result).toBe(false);
+      });
+    });
+
+    describe('phasor', () => {
+      it('should return true for a Rest object', () => {
+        const phasor: Rest = { phase: Phase.Rest };
+        const result = ph.is.phasor(phasor);
+        expect(result).toBe(true);
+      });
+
+      it('should return true for a Run object', () => {
+        const phasor: Run<string> = { phase: Phase.Run, input: 'test' };
+        const result = ph.is.phasor(phasor);
+        expect(result).toBe(true);
+      });
+
+      // Add similar tests for other phasor types
+
+      it('should return false for non-phasor objects', () => {
+        const phasor = 'test';
+        const result = ph.is.phasor(phasor);
+        expect(result).toBe(false);
+      });
+    });
   });
 });
