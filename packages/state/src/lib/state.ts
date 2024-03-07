@@ -21,5 +21,5 @@ export function make<
     return [toss as Toss<OwnAction>] as const;
   }
 
-  return [attach]
+  return [attach];
 }

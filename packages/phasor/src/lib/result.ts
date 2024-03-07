@@ -53,6 +53,6 @@ export const res = {
       if (!('status' in result)) return false;
       if (typeof result.status !== 'string') return false;
       return true;
-    }
+    },
   },
 };

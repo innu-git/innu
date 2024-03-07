@@ -1,11 +1,11 @@
-import { Phase, Rest } from "@innu/phasor";
-import { StateManager } from "../lib/state.types";
+import { Phase, Rest } from '@innu/phasor';
+import { StateManager } from '../lib/state.types';
 
 export const state = {
   count: 0,
   lastAdd: Date.now(),
   user: {
-    phase: Phase.Rest
+    phase: Phase.Rest,
   } as Rest,
 };
 
