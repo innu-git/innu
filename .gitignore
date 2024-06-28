@@ -40,6 +40,7 @@ nx-cloud.env
 Thumbs.db
 
 .nx/cache
+.nx/workspace-data
 
 # Yarn
 .yarn/*
