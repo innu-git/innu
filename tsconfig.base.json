@@ -15,8 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@innu/phasor": ["packages/phasor/src/index.ts"],
-      "@innu/state": ["packages/state/src/state.ts"]
+      "@innu/phasor": ["packages/phasor/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
