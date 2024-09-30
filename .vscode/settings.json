@@ -1,4 +1,4 @@
 {
   "cSpell.words": ["innu", "phasor"],
-  "typescript.tsdk": "node_modules\\typescript\\lib"
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
