@@ -39,5 +39,6 @@
     ],
     "sharedGlobals": []
   },
-  "nxCloudAccessToken": "N2U0NmJkYTEtOGE3MC00MjVmLWFjYTItZDUwMGIzNzQzMzNkfHJlYWQ="
+  "nxCloudAccessToken": "N2U0NmJkYTEtOGE3MC00MjVmLWFjYTItZDUwMGIzNzQzMzNkfHJlYWQ=",
+  "useLegacyCache": true
 }
